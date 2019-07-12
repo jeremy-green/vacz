@@ -1,0 +1,16 @@
+@startuml
+    Error : errno 109
+    Reattempt : repeat n times
+    state Reattempt {
+        Cleaning --> ReattemptError
+        ReattemptError --> Cleaning
+        state "Error" as ReattemptError
+    }
+    [*] --> Error 
+    Error --> Reattempt
+    Reattempt --> BackOff : Failed
+    Reattempt --> [*]
+    BackOff --> Reattempt : Backed Off
+    BackOff --> Dead : Back off failed
+    BackOff : exponential backoff
+@enduml
